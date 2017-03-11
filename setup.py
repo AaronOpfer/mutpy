@@ -16,6 +16,7 @@ setup(
     url='https://bitbucket.org/khalas/mutpy',
     download_url='https://bitbucket.org/khalas/mutpy',
     packages=['mutpy'],
+    package_data={'templates': ['templates/*.html']},
     scripts=['bin/mut.py'],
     install_requires=['PyYAML>=3.1', 'Jinja2>=2.7.1'],
     test_suite='mutpy.test',
