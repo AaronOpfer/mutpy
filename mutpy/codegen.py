@@ -105,6 +105,10 @@ class AbstractSourceGenerator(ast.NodeVisitor):
         self.indentation = 0
         self.new_line = False
 
+    @classmethod
+    def _is_node_args_valid(cls, node, arg_name):
+        return hasattr(node, arg_name) and getattr(node, arg_name) is not None
+
     def write(self, x, node=None):
         self.correct_line_number(node)
         self.result.append(x)
@@ -237,11 +241,11 @@ class AbstractSourceGenerator(ast.NodeVisitor):
                 paren_or_comma()
                 self.write(keyword.arg + '=')
                 self.visit(keyword.value)
-            if node.starargs is not None:
+            if self._is_node_args_valid(node, 'starargs'):
                 paren_or_comma()
                 self.write('*')
                 self.visit(node.starargs)
-            if node.kwargs is not None:
+            if self._is_node_args_valid(node, 'kwargs'):
                 paren_or_comma()
                 self.write('**')
                 self.visit(node.kwargs)
@@ -330,7 +334,6 @@ class AbstractSourceGenerator(ast.NodeVisitor):
             self.write(' ')
             self.visit(node.value)
 
-
     def visit_Break(self, node):
         self.newline(node)
         self.write('break')
@@ -381,11 +384,11 @@ class AbstractSourceGenerator(ast.NodeVisitor):
             write_comma()
             self.write(keyword.arg + '=')
             self.visit(keyword.value)
-        if node.starargs is not None:
+        if self._is_node_args_valid(node, 'starargs'):
             write_comma()
             self.write('*')
             self.visit(node.starargs)
-        if node.kwargs is not None:
+        if self._is_node_args_valid(node, 'kwargs'):
             write_comma()
             self.write('**')
             self.visit(node.kwargs)
